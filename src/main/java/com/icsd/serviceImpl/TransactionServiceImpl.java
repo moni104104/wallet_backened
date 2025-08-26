@@ -51,7 +51,7 @@ public Transaction depositAmountInAccount(TransactionDepositRequestDTO tdd) {
 	Account acc = accountServiceImpl.getAccountByAccNumber(accountNumber);
 	
 	log.info(
-			"acc reterived from account servi inside transaction service implementation - we use accountservice as a dependency inisde transaction service ");
+			"acc reterived from account service inside transaction service implementation - we use accountservice as a dependency inisde transaction service ");
 	log.info("To acocunt reterieved is " + acc);
 	double newOpeningBalance = acc.getOpeningBalance() + tdd.getAmount();
 	log.info("updating opening balance in account");
