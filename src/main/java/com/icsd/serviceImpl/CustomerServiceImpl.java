@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.icsd.dto.common.messages;
 import com.icsd.dto.request.CustomerLoginDTO;
 import com.icsd.dto.request.CustomerRequestDto;
 import com.icsd.dto.response.CustomerFnmLnmGenderDTO;
@@ -38,13 +39,12 @@ public class CustomerServiceImpl implements CustomerService{
 	@Override
 	public Integer createCustomer(@Valid CustomerRequestDto  crDto) {
 		log.info("Inside save customer of service with given request"+crDto);
-		System.out.println("inside save customer of service with given request "+ crDto);
 	 
 		
 		Optional<Customer> optCust=customerRepo.findByEmailId(crDto.getEmailId());
 		if(optCust.isPresent())
 		{
-		throw new EntityAlreadyExistException("Customer email id is already existing ");
+		throw new EntityAlreadyExistException(messages.EMAIL_ALREADY_EXIST);
 		}
 	
 		Address add=Address.builder().addressLine1(crDto.getAddressLine1())
@@ -74,7 +74,8 @@ public class CustomerServiceImpl implements CustomerService{
 		if(optCust.isEmpty())
 		{
 			res=false;
-			throw new ResourceNotFoundException("customer is not existing for email id "+ customerLogin.getEmailId() + " and pwd= "+ customerLogin.getPassword());
+			log.info("customer is not existing for email id "+ customerLogin.getEmailId() + " and pwd= "+ customerLogin.getPassword());
+			throw new ResourceNotFoundException(messages.RESOURCE_NOT_FOUND);
 		}
 		
 		return res;

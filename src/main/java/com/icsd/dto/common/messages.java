@@ -19,6 +19,7 @@ public static final String CUSTOMER_NOT_FOUND ="no customer found";
 
 
 
+
 //ADDRESS TABLE
 public static final String ADDRESS_NULL= "address with null value";
 public static final String ADDRESS_NOT_NULL= "address with not null value";
@@ -49,7 +50,9 @@ public static final String INSUFFICIENT_BALANCE="not enough balance to complete 
 
 
 //EXCEPTION
-public static final String RESOURCE_NOT_FOUND="not record found";
+public static final String RESOURCE_NOT_FOUND="record not found";
+public static final String EMAIL_ALREADY_EXIST = "Customer email id is already existing ";
+
 
 
 
