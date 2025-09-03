@@ -18,27 +18,25 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor
 public class SubscriptionReminderScheduler {
-	
+
 	private final CustomerRepo customerRepo;
 	private final EmailService emailService;
 
-	
-	@Scheduled(cron = "0 08 14 * * *") 
+	@Scheduled(cron = "0 59 13 * * *")
 	public void sendExpiryReminders() {
-	    LocalDate tomorrow = LocalDate.now().plusDays(1);
-	    List<Customer> expiringCustomers = customerRepo.findByExpiryDate(tomorrow);
-	    
-	    log.info("Found customers: " + expiringCustomers.size());
+		LocalDate tomorrow = LocalDate.now().plusDays(9);
+		List<Customer> expiringCustomers = customerRepo.findByExpiryDate(tomorrow);
 
-	    for (Customer customer : expiringCustomers) {
-	        log.info("Preparing email for: " + customer.getEmailId());
+		log.info("Found customers: " + expiringCustomers.size());
 
-	        String subject = messages.SUBSCRIPTION_SUBJECT;
-	        String body = "Hello " + customer.getFirstName() + ", Your " +
-	            customer.getStatus() + " version is expiring on " +
-	            customer.getExpiryDate() + ". Please renew it.";
-	        emailService.sendEmail(customer.getEmailId(), subject, body);
-	    }
+		for (Customer customer : expiringCustomers) {
+			log.info("Preparing email for: " + customer.getEmailId());
+
+			String subject = messages.SUBSCRIPTION_SUBJECT;
+			String body = "Hello " + customer.getFirstName() + ", Your " + customer.getStatus()
+					+ " version is expiring on " + customer.getExpiryDate() + ". Please renew it.";
+			emailService.sendEmail(customer.getEmailId(), subject, body);
+		}
 	}
 
 }

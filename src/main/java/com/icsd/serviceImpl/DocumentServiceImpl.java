@@ -3,8 +3,8 @@ package com.icsd.serviceImpl;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,6 @@ import com.icsd.repo.DocumentRepo;
 import com.icsd.service.DocumentService;
 
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -93,10 +92,10 @@ log.info("data converted from object to entity");
 	}
 
 	@Override
-	public Optional<Document> getDocumentsByCustomerId(int customerId) {
+	public List<Document> getDocumentsByCustomerId(int customerId) {
 		log.info("inside serviceImpl get document by customer id"+customerId);
-		Optional<Document>docs=documentRepo.findByCustomerId(customerId);
-		return docs;
+		List<Document> listDocuments=documentRepo.findByCustomerId(customerId);
+		return listDocuments;
 	}
 
 	@Override
