@@ -8,7 +8,8 @@ public interface AddressService {
 
 	public List<Address> findByAddressLine2IsNull();
 
-	public List<Address>findByAddressLine2IsNotNull();
+	public List<Address> findByAddressLine2IsNotNull();
 
+//	public Optional<Address> getAddressByCustomerId(int customerId);
 
 }

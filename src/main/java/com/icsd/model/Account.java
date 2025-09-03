@@ -22,30 +22,26 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Account {
-	
+
 	@Id
-	@SequenceGenerator(name="generator",sequenceName="accidSeq", allocationSize=1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="generator")
+	@SequenceGenerator(name = "generator", sequenceName = "accidSeq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
 	private int accountNumber;
-	
+
 	@ManyToOne
-	@JoinColumn(name="customerFk")
+	@JoinColumn(name = "customerFk")
 	private Customer customer;
 	@Enumerated(EnumType.STRING)
 	private AccountType accountType;
 	private double openingBalance;
-	private LocalDate   openingDate=LocalDate.now();//openingDate
+	private LocalDate openingDate = LocalDate.now();
 	private String description;
-	
-	
-	
+
 	@Override
 	public String toString() {
-		return "Account [accountNumber=" + accountNumber + ", customer=" +" accountType=" + accountType
+		return "Account [accountNumber=" + accountNumber + ", customer=" + " accountType=" + accountType
 				+ ", openingBalance=" + openingBalance + ", openingDate=" + openingDate + ", description=" + description
 				+ "]";
 	}
-	
-	
 
 }
