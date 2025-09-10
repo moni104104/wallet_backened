@@ -87,7 +87,7 @@ public class CustomerRequestDto {
 
 	private LocalDate expiryDate;
 	
-	   private SubscriptionStatus status;
+	 private SubscriptionStatus status;
 
 	   @Override
 	   public String toString() {

@@ -1,25 +1,18 @@
 package com.icsd.serviceImpl;
 
-import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.icsd.dto.common.messages;
 import com.icsd.dto.request.CustomerLoginDTO;
 import com.icsd.dto.request.CustomerRequestDto;
-import com.icsd.dto.request.RowError;
 import com.icsd.dto.response.CustomerFnmLnmGenderDTO;
 import com.icsd.exception.EntityAlreadyExistException;
-import com.icsd.exception.InvalidExcelDataException;
 import com.icsd.exception.ResourceNotFoundException;
-import com.icsd.helper.ExcelHelper;
 import com.icsd.model.Address;
 import com.icsd.model.Customer;
 import com.icsd.repo.AddressRepo;
@@ -34,7 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
-	private Validator validator;
 	private final CustomerRepo customerRepo;
 	private final AddressRepo addressRepo;
 	private final int expiryDays;
@@ -44,7 +36,6 @@ public class CustomerServiceImpl implements CustomerService {
 		this.customerRepo = customerRepo;
 		this.addressRepo = addressRepo;
 		this.expiryDays = expiryDays;
-		this.validator = validator;
 
 	}
 
@@ -66,12 +57,11 @@ public class CustomerServiceImpl implements CustomerService {
 				.expiryDate(LocalDate.now().plusDays(expiryDays)).status(crDto.getStatus()).build();
 		log.info("cust entity is now from builder : " + cust);
 		Customer custCreated = customerRepo.save(cust);
-
 		return custCreated.getCustomerId();
 	}
 
 	@Override
-	public Customer isValidCustByEmailidAndPwd(CustomerLoginDTO customerLogin) {
+	public Customer isValidCustByEmailidAndPwd(@Valid CustomerLoginDTO customerLogin) {
 		log.info("Inside customer service to chek whether user is valid or not" + customerLogin);
 
 		Optional<Customer> optCust = customerRepo.findByEmailIdAndPassword(customerLogin.getEmailId(),
@@ -130,41 +120,90 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public List<Customer> getAllCustomersFromExcel() {
-		List<Customer> customers = customerRepo.findAll();
-		return customers;
-	}
-
-	@Override
-	public void saveCustomersFromExcel(MultipartFile file) {
-		List<RowError> rowErrors = new ArrayList<>();
-		Set<String> dbEmails = customerRepo.findAllEmails();
-		log.info("emails present in database");
-		try {
-			List<Customer> customersToSave = ExcelHelper.convertExcelToListOfCustomers(file.getInputStream(),
-					addressRepo, expiryDays, validator, rowErrors, dbEmails);
-
-			if (!customersToSave.isEmpty()) {
-				customerRepo.saveAll(customersToSave);
-				log.info("customers saved successfully");
-			}
-
-			if (!rowErrors.isEmpty()) {
-				throw new InvalidExcelDataException(rowErrors);
-			}
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		
-	}
-
-	@Override
 	public Optional<Customer> getCustomerByCustomerId(int customerId) {
 		log.info("inside service to getCustomerByCustomerId" + customerId);
 		Optional<Customer> cust = customerRepo.findById(customerId);
 		return cust;
 	}
+
+	@Override
+	public void deleteCustomerByCustomerId(int customerId) {
+		log.info("inside service to deleteCustomerByCustomerId" + customerId);
+		customerRepo.deleteById(customerId);
+
+	}
+
+	@Override
+	public Customer updateCustomerByCustomerId(int customerId, @Valid CustomerRequestDto customerRequest) {
+		log.info("inside service to updateCustomerByCustomerId" + customerId);
+		Optional<Customer> existingCustomer = customerRepo.findById(customerId);
+		Customer updatedCustomer = existingCustomer.get();
+
+		if (customerRequest.getFirstName() != null) {
+			updatedCustomer.setFirstName(customerRequest.getFirstName());
+		}
+		if (customerRequest.getLastName() != null) {
+			updatedCustomer.setLastName(customerRequest.getLastName());
+		}
+		if (customerRequest.getEmailId() != null) {
+			updatedCustomer.setEmailId(customerRequest.getEmailId());
+		}
+		if (customerRequest.getContactNo() != null) {
+			updatedCustomer.setContactNo(customerRequest.getContactNo());
+		}
+		if (customerRequest.getGender() != null) {
+			updatedCustomer.setGender(customerRequest.getGender());
+
+		}
+		if (customerRequest.getPassword() != null) {
+			updatedCustomer.setPassword(customerRequest.getPassword());
+		}
+
+		Address address = updatedCustomer.getAddress();
+		if (address == null) {
+			address = new Address();
+		}
+		if (customerRequest.getAddressLine1() != null) {
+			address.setAddressLine1(customerRequest.getAddressLine1());
+		}
+		if (customerRequest.getAddressLine2() != null) {
+			address.setAddressLine1(customerRequest.getAddressLine2());
+		}
+		if (customerRequest.getCity() != null) {
+			address.setAddressLine1(customerRequest.getCity());
+		}
+		if (customerRequest.getState() != null) {
+			address.setAddressLine1(customerRequest.getState());
+		}
+		if (customerRequest.getPincode() != null) {
+			address.setAddressLine1(customerRequest.getPincode());
+		}
+
+		updatedCustomer.setAddress(address);
+
+		if (customerRequest.getStatus() != null) {
+			updatedCustomer.setStatus(customerRequest.getStatus());
+		}
+		return customerRepo.save(updatedCustomer);
+
+	}
+
+//	@Override
+//	public List<Customer> searchCustomer(String firstName, String emailId) {
+//		if(emailId != null && firstName != null ) {
+//            return customerRepo.findByFirstNameAndEmailIdContainingIgnoreCase(firstName, emailId);	
+//		}
+//		else if(firstName!=null){
+//            return customerRepo.findByFirstNameContainingIgnoreCase(firstName);
+//
+//		}
+//		else if(emailId!=null) {
+//            return customerRepo.findByEmailIdContainingIgnoreCase(emailId);
+//
+//		}
+//		else {
+//			return customerRepo.findAll();
+//		}
+//	}
 
 }

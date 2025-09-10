@@ -3,6 +3,7 @@ package com.icsd.serviceImpl;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +14,7 @@ import com.icsd.model.Account;
 import com.icsd.model.Customer;
 import com.icsd.model.Transaction;
 import com.icsd.service.AccountService;
+import com.icsd.service.AdminService;
 import com.icsd.service.CustomerService;
 import com.icsd.service.DocumentService;
 import com.icsd.service.PdfService;
@@ -35,6 +37,8 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class PdfServiceImpl implements PdfService {
 
+	@Autowired
+	private AdminService adminService;
 	@Autowired
 	private AccountService accountService;
 	@Autowired
@@ -64,7 +68,6 @@ public class PdfServiceImpl implements PdfService {
 
 		Table customerTable = new Table(2);
 		log.info("Create customer table to add customer data");
-
 		customerTable.setWidth(UnitValue.createPercentValue(100));
 		Cell leftCell1 = new Cell().add(new Paragraph("Customer Id : " + customer.getCustomerId())).setBorder(null)
 				.setTextAlignment(TextAlignment.LEFT).setFontSize(13);
@@ -208,6 +211,9 @@ public class PdfServiceImpl implements PdfService {
 
 		List<Transaction> transactions = transactionService.getTransactionsByCustomerId(customerId);
 		// if (!transactions.isEmpty()) {
+		transactions.sort(Comparator
+			    .comparing(Transaction::getTransactionDate)
+			    .thenComparing(Transaction::getTransactionId));
 		Paragraph transaction_title = new Paragraph("Transaction Details");
 		transaction_title.setBold().setFontSize(15).setTextAlignment(TextAlignment.CENTER);
 		transaction_title.setUnderline();
@@ -226,27 +232,27 @@ public class PdfServiceImpl implements PdfService {
 			transaction_table.addCell(new Cell().add(new Paragraph(String.valueOf(transaction.getTransactionId()))));
 			transaction_table.addCell(new Cell().add(new Paragraph(String.valueOf(transaction.getTransactionDate()))));
 
-		//	Account toAcc = transaction.getToAccountNumber();
-//			if (toAcc == null) {
-//				transaction_table.addCell(new Cell()
-//						.add(new Paragraph(String.valueOf(transaction.getFromAccountNumber().getAccountNumber()))));
-//
-//			} else {
-//				transaction_table.addCell(new Cell()
-//						.add(new Paragraph(String.valueOf(transaction.getToAccountNumber().getAccountNumber()))));
-//			}
-
-			Account fromAcc = transaction.getFromAccountNumber();
-			if (fromAcc == null) {
+			Account toAcc = transaction.getToAccountNumber();
+			if (toAcc == null) {
 				transaction_table.addCell(new Cell()
-						.add(new Paragraph(String.valueOf(transaction.getToAccountNumber().getAccountNumber()))));
-
+						.add(new Paragraph(String.valueOf(transaction.getFromAccountNumber().getAccountNumber()))));
 
 			} else {
 				transaction_table.addCell(new Cell()
-				.add(new Paragraph(String.valueOf(transaction.getFromAccountNumber().getAccountNumber()))));
-
+						.add(new Paragraph(String.valueOf(transaction.getToAccountNumber().getAccountNumber()))));
 			}
+
+//			Account fromAcc = transaction.getFromAccountNumber();
+//			if (fromAcc == null) {
+//				transaction_table.addCell(new Cell()
+//						.add(new Paragraph(String.valueOf(transaction.getToAccountNumber().getAccountNumber()))));
+//
+//
+//			} else {
+//				transaction_table.addCell(new Cell()
+//				.add(new Paragraph(String.valueOf(transaction.getFromAccountNumber().getAccountNumber()))));
+//
+//			}
 			transaction_table.addCell(new Cell().add(new Paragraph(String.valueOf(transaction.getAmount()))));
 			transaction_table.addCell(new Cell().add(new Paragraph(String.valueOf(transaction.getTransactionType()))));
 
@@ -258,6 +264,51 @@ public class PdfServiceImpl implements PdfService {
 		document.close();
 
 		return new ByteArrayInputStream(out.toByteArray());
+	}
+
+	@Override
+	public ByteArrayInputStream allCustomersPdf() throws IOException {
+		log.info("inside pdf service");
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		PdfWriter writer = new PdfWriter(out);
+		PdfDocument pdfDoc = new PdfDocument(writer);
+		Document document = new Document(pdfDoc);
+		
+		
+	List<Customer> customerList = adminService.getAllCustomers();
+		log.info("Customer present");
+		Paragraph basic_title = new Paragraph("Basic Details");
+		basic_title.setBold().setFontSize(15).setTextAlignment(TextAlignment.CENTER);
+		basic_title.setUnderline();
+		document.add(basic_title);
+
+		Table customerTable = new Table(3);
+		log.info("Create customer table to add customer data");
+		customerTable.setWidth(UnitValue.createPercentValue(100));
+
+		customerTable.addHeaderCell(new Cell().add(new Paragraph("Customer Id")).setBold());
+		customerTable.addHeaderCell(new Cell().add(new Paragraph("Email Id")).setBold());
+		customerTable.addHeaderCell(new Cell().add(new Paragraph("Full Details")).setBold());
+
+
+		log.info("data inside the table");
+		for (Customer customer  : customerList) {
+			customerTable.addCell(new Cell().add(new Paragraph(String.valueOf(customer.getCustomerId()))));
+			customerTable.addCell(new Cell().add(new Paragraph(String.valueOf(customer.getEmailId()))));
+		    String url = "http://localhost:8900/api/customer/pdf/" + customer.getCustomerId();
+			Link link = (Link) new Link("Get PDF", PdfAction.createURI(url)).setFontColor(ColorConstants.BLUE).setUnderline();
+
+			Paragraph paragraph = new Paragraph(link);
+
+			customerTable.addCell(new Cell().add(paragraph));
+
+		}
+		customerTable.setMargin(15f);
+
+		document.add(customerTable);
+		document.close();
+		return new ByteArrayInputStream(out.toByteArray());
+
 	}
 
 }

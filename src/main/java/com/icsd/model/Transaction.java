@@ -21,33 +21,30 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor
 @AllArgsConstructor
 @Slf4j
-public class Transaction 
-{
+public class Transaction {
 
 	@Id
 	@SequenceGenerator(name = "generator", sequenceName = "transidSeq", allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")	
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
 	private int transactionId;
-	
+
 	@Enumerated(EnumType.STRING)
 	private TransactionType transactionType;
-	
+
 	private LocalDate transactionDate;
 	private double amount;
 	private String description;
-	
 
 	@ManyToOne
-	@JoinColumn(name="frmAccFk")
+	@JoinColumn(name = "frmAccFk")
 	private Account fromAccountNumber;
-	
+
 	@ManyToOne
-	@JoinColumn(name="toAccFk")
+	@JoinColumn(name = "toAccFk")
 	private Account toAccountNumber;
-	
-	
+
 	public Transaction(TransactionType transactionType, LocalDate transactionDate, double amount, String description,
-		 Account fromAccountNumber, Account toAccountNumber) {
+			Account fromAccountNumber, Account toAccountNumber) {
 		super();
 		this.transactionType = transactionType;
 		this.transactionDate = transactionDate;

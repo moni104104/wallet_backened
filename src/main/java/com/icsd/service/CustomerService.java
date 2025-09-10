@@ -3,8 +3,6 @@ package com.icsd.service;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import com.icsd.dto.request.CustomerLoginDTO;
 import com.icsd.dto.request.CustomerRequestDto;
 import com.icsd.dto.response.CustomerFnmLnmGenderDTO;
@@ -32,10 +30,10 @@ public interface CustomerService {
 
 	public Optional<Customer> getCustomerDataByEmailId(String emailId);
 
-	void saveCustomersFromExcel(MultipartFile file);
-
-	List<Customer> getAllCustomersFromExcel();
-
 	public Optional<Customer> getCustomerByCustomerId(int customerId);
+
+	public void deleteCustomerByCustomerId(int customerId);
+
+	public Customer updateCustomerByCustomerId(int customerId, @Valid CustomerRequestDto customerRequest);
 
 }

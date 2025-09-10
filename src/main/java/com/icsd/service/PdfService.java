@@ -9,4 +9,6 @@ public interface PdfService {
 
 	ByteArrayInputStream generateCustomerPdf(int customerId) throws IOException;
 
+	ByteArrayInputStream allCustomersPdf() throws IOException;
+
 }
