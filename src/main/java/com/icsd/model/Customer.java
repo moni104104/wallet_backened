@@ -51,7 +51,7 @@ public class Customer {
 	String password;
 	@Transient
 	String confirmPassword;
-	private LocalDate registerationDate;
+	private LocalDate registrationDate;
 
 	private LocalDate expiryDate;
 

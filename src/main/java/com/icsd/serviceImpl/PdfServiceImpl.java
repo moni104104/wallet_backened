@@ -82,7 +82,7 @@ public class PdfServiceImpl implements PdfService {
 				.setTextAlignment(TextAlignment.RIGHT).setFontSize(13);
 		Cell rightCell2 = new Cell().add(new Paragraph("Last Name: " + customer.getLastName())).setBorder(null)
 				.setTextAlignment(TextAlignment.RIGHT).setFontSize(13);
-		Cell rightCell3 = new Cell().add(new Paragraph("Registration Date : " + customer.getRegisterationDate()))
+		Cell rightCell3 = new Cell().add(new Paragraph("Registration Date : " + customer.getRegistrationDate()))
 				.setBorder(null).setTextAlignment(TextAlignment.RIGHT).setFontSize(13);
 		Cell rightCell4 = new Cell().add(new Paragraph("Valid Upto : " + customer.getExpiryDate())).setBorder(null)
 				.setTextAlignment(TextAlignment.RIGHT).setFontSize(13);

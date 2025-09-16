@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.icsd.dto.common.messages;
@@ -53,7 +55,7 @@ public class CustomerServiceImpl implements CustomerService {
 		Address addCreated = addressRepo.save(add);
 		Customer cust = Customer.builder().firstName(crDto.getFirstName()).lastName(crDto.getLastName())
 				.emailId(crDto.getEmailId()).contactNo(crDto.getContactNo()).address(addCreated)
-				.gender(crDto.getGender()).password(crDto.getPassword()).registerationDate(LocalDate.now())
+				.gender(crDto.getGender()).password(crDto.getPassword()).registrationDate(LocalDate.now())
 				.expiryDate(LocalDate.now().plusDays(expiryDays)).status(crDto.getStatus()).build();
 		log.info("cust entity is now from builder : " + cust);
 		Customer custCreated = customerRepo.save(cust);
@@ -187,6 +189,21 @@ public class CustomerServiceImpl implements CustomerService {
 		return customerRepo.save(updatedCustomer);
 
 	}
+	
+	
+
+
+	@Override
+	public Page<Customer> getAllCustomer(Pageable pageable) {
+		return customerRepo.findAll(pageable);
+	}
+
+	@Override
+	public Page<Customer> searchCustomersByFirstNameAndEmailId(String keyword, String keyword2, Pageable pageable) {
+		return customerRepo.findByFirstNameContainingIgnoreCaseOrEmailIdContainingIgnoreCase(
+                keyword, keyword, pageable);
+	}
+
 
 //	@Override
 //	public List<Customer> searchCustomer(String firstName, String emailId) {

@@ -194,7 +194,7 @@ public class ExcelHelper {
 					customer.setPassword(dto.getPassword());
 					customer.setConfirmPassword(dto.getConfirmPassword());
 					customer.setStatus(dto.getStatus());
-					customer.setRegisterationDate(LocalDate.now());
+					customer.setRegistrationDate(LocalDate.now());
 					customer.setExpiryDate(LocalDate.now().plusDays(expiryDays));
 					customer.setAddress(savedAddress);
 

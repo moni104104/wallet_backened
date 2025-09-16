@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.icsd.dto.common.ApiResponse;
@@ -88,6 +93,8 @@ public class CustomerController {
 		return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF).body(bis.readAllBytes());
 	}
 
+
+	
 	@DeleteMapping("/customer/{customerId}")
 	public ResponseEntity<ApiResponse> deleteCustomerByCustomerId(@PathVariable("customerId") int customerId) {
 		Optional<Customer> cust = customerService.getCustomerByCustomerId(customerId);
@@ -99,6 +106,8 @@ public class CustomerController {
 		ApiResponse apiResponse = new ApiResponse(HttpStatus.OK.value(), messages.CUSTOMER_DELETE);
 		return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.OK);
 	}
+	
+	
 
 	@PutMapping("/customer/{customerId}")
 	public ResponseEntity<ApiResponse> updateCustomerByCustomerId(@PathVariable("customerId") int customerId,
@@ -222,6 +231,30 @@ public class CustomerController {
 		ApiResponse apiresponse = new ApiResponse(HttpStatus.FOUND.value(), messages.CUSTOMER_FOUND, list);
 
 		return new ResponseEntity<>(apiresponse, HttpStatus.OK);
+	}
+
+	
+	
+	
+	
+	
+
+@GetMapping("/customers")
+	public Page<Customer> getCustomers(@RequestParam(name="pageNo",defaultValue = "0",required = false) int pageNo,
+			@RequestParam(name="pageSize",defaultValue = "2",required = false) int pageSize, @RequestParam(name="sortBy",defaultValue = "customerId",required = false) String sortBy,
+			@RequestParam(defaultValue = "asc", name ="sortDir",required = false) String sortDir, @RequestParam(name="keyword", required = false) String keyword) {
+
+		Sort sort= sortDir.equalsIgnoreCase("desc")? Sort.by(sortBy).descending():Sort.by(sortBy).ascending();
+		
+		Pageable pageable= PageRequest.of(pageNo, pageSize, sort);
+		
+		if(keyword!=null && !keyword.isEmpty()) {
+			return customerService.searchCustomersByFirstNameAndEmailId(keyword,keyword,pageable);
+		}
+		else {
+			return customerService.getAllCustomer(pageable);
+		}
+		
 	}
 
 }

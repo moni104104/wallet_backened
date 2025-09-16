@@ -3,6 +3,9 @@ package com.icsd.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.icsd.dto.request.CustomerLoginDTO;
 import com.icsd.dto.request.CustomerRequestDto;
 import com.icsd.dto.response.CustomerFnmLnmGenderDTO;
@@ -36,4 +39,8 @@ public interface CustomerService {
 
 	public Customer updateCustomerByCustomerId(int customerId, @Valid CustomerRequestDto customerRequest);
 
+
+	public Page<Customer> getAllCustomer(Pageable pageable);
+
+	public Page<Customer> searchCustomersByFirstNameAndEmailId(String keyword, String keyword2, Pageable pageable);
 }
