@@ -8,6 +8,7 @@ import com.icsd.dto.common.messages;
 import com.icsd.model.Gender;
 import com.icsd.model.SubscriptionStatus;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -67,22 +68,28 @@ public class CustomerRequestDto {
 	@NotBlank(message = messages.NOT_BLANK)
 	@NotNull(message=messages.NOT_NULL)
 	private String confirmPassword;
-	@NotBlank(message = messages.NOT_BLANK)
-	@NotNull(message=messages.NOT_NULL)
-	private String addressLine1;
-//	@NotBlank(message = "First name should not be blank")
-//	@NotNull(message="First name should not be null")
-	private String addressLine2;
-	@NotBlank(message = messages.NOT_BLANK)
-	@NotNull(message=messages.NOT_NULL)
-	private String city;
-	@NotBlank(message = messages.NOT_BLANK)
-	@NotNull(message=messages.NOT_NULL)
-	private String State;
-	@NotBlank(message = messages.NOT_BLANK)
-	@NotNull(message=messages.NOT_NULL)
-    @Pattern(regexp = "^[0-9]{6}$", message =messages.PINCODE_PATTERN)
-	private String pincode;
+//	@NotBlank(message = messages.NOT_BLANK)
+//	@NotNull(message=messages.NOT_NULL)
+//	private String addressLine1;
+////	@NotBlank(message = "First name should not be blank")
+////	@NotNull(message="First name should not be null")
+//	private String addressLine2;
+//	@NotBlank(message = messages.NOT_BLANK)
+//	@NotNull(message=messages.NOT_NULL)
+//	private String city;
+//	@NotBlank(message = messages.NOT_BLANK)
+//	@NotNull(message=messages.NOT_NULL)
+//	private String State;
+//	@NotBlank(message = messages.NOT_BLANK)
+//	@NotNull(message=messages.NOT_NULL)
+//    @Pattern(regexp = "^[0-9]{6}$", message =messages.PINCODE_PATTERN)
+//	private String pincode;
+
+
+@Valid
+@NotNull(message = "Address must not be null")
+AddressDto address;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
 
 	private LocalDate expiryDate;
@@ -93,19 +100,10 @@ public class CustomerRequestDto {
 	   public String toString() {
 		return "CustomerRequestDto [firstName=" + firstName + ", lastName=" + lastName + ", emailId=" + emailId
 				+ ", contactNo=" + contactNo + ", gender=" + gender + ", password=" + password + ", confirmPassword="
-				+ confirmPassword + ", addressLine1=" + addressLine1 + ", addressLine2=" + addressLine2 + ", city="
-				+ city + ", State=" + State + ", pincode=" + pincode + ", expiryDate=" + expiryDate + ", status="
-				+ status + "]";
+				+ confirmPassword + ", expiryDate=" + expiryDate + ", status=" + status + "]";
 	   }
 
-	//@Override
-//	public String toString() {
-//		return "CustomerRequestDto [firstName=" + firstName + ", lastName=" + lastName + ", emailId=" + emailId
-//				+ ", contactNo=" + contactNo + ", gender=" + gender + ", password=" + password + ", confirmPassword="
-//				+ confirmPassword + ", addressLine1=" + addressLine1 + ", addressLine2=" + addressLine2 + ", city="
-//				+ city + ", State=" + State + ", pincode=" + pincode + "]";
-//	}
-//		
+
 	
 	
 	

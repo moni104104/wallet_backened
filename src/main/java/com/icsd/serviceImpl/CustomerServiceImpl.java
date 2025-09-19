@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import com.icsd.dto.request.AddressDto;
+import com.icsd.model.Address;
+import com.icsd.service.AddressClientService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +18,6 @@ import com.icsd.dto.request.CustomerRequestDto;
 import com.icsd.dto.response.CustomerFnmLnmGenderDTO;
 import com.icsd.exception.EntityAlreadyExistException;
 import com.icsd.exception.ResourceNotFoundException;
-import com.icsd.model.Address;
 import com.icsd.model.Customer;
 import com.icsd.repo.AddressRepo;
 import com.icsd.repo.CustomerRepo;
@@ -32,14 +34,17 @@ public class CustomerServiceImpl implements CustomerService {
 	private final CustomerRepo customerRepo;
 	private final AddressRepo addressRepo;
 	private final int expiryDays;
+    private final AddressClientService addressClientService;
 
-	public CustomerServiceImpl(CustomerRepo customerRepo, AddressRepo addressRepo,
-			@Value("${customer.expiry.days}") int expiryDays, Validator validator) {
+
+    public CustomerServiceImpl(CustomerRepo customerRepo, AddressRepo addressRepo,
+                               @Value("${customer.expiry.days}") int expiryDays, Validator validator, AddressClientService addressClientService) {
 		this.customerRepo = customerRepo;
 		this.addressRepo = addressRepo;
 		this.expiryDays = expiryDays;
+        this.addressClientService = addressClientService;
 
-	}
+    }
 
 	@Override
 	public Integer createCustomer(@Valid CustomerRequestDto crDto) {
@@ -49,12 +54,16 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new EntityAlreadyExistException(messages.EMAIL_ALREADY_EXIST);
 		}
 
-		Address add = Address.builder().addressLine1(crDto.getAddressLine1()).addressLine2(crDto.getAddressLine2())
-				.city(crDto.getCity()).state(crDto.getState()).pincode(crDto.getPincode()).build();
+		AddressDto addressDto = AddressDto.builder().addressLine1(crDto.getAddress().getAddressLine1()).addressLine2(crDto.getAddress().getAddressLine2())
+				.city(crDto.getAddress().getCity()).state(crDto.getAddress().getState()).pincode(crDto.getAddress().getPincode()).build();
+        log.info("adress dto in customer"+addressDto);
 
-		Address addCreated = addressRepo.save(add);
-		Customer cust = Customer.builder().firstName(crDto.getFirstName()).lastName(crDto.getLastName())
-				.emailId(crDto.getEmailId()).contactNo(crDto.getContactNo()).address(addCreated)
+        Address savedAddress = addressClientService.saveAddress(addressDto);
+
+        log.info("adress dto after saved "+savedAddress.getAddressId());
+
+        Customer cust = Customer.builder().firstName(crDto.getFirstName()).lastName(crDto.getLastName())
+				.emailId(crDto.getEmailId()).contactNo(crDto.getContactNo()).address(savedAddress)
 				.gender(crDto.getGender()).password(crDto.getPassword()).registrationDate(LocalDate.now())
 				.expiryDate(LocalDate.now().plusDays(expiryDays)).status(crDto.getStatus()).build();
 		log.info("cust entity is now from builder : " + cust);
@@ -165,20 +174,20 @@ public class CustomerServiceImpl implements CustomerService {
 		if (address == null) {
 			address = new Address();
 		}
-		if (customerRequest.getAddressLine1() != null) {
-			address.setAddressLine1(customerRequest.getAddressLine1());
+		if (customerRequest.getAddress().getAddressLine1() != null) {
+			address.setAddressLine1(customerRequest.getAddress().getAddressLine1());
 		}
-		if (customerRequest.getAddressLine2() != null) {
-			address.setAddressLine1(customerRequest.getAddressLine2());
+		if (customerRequest.getAddress().getAddressLine2() != null) {
+			address.setAddressLine1(customerRequest.getAddress().getAddressLine2());
 		}
-		if (customerRequest.getCity() != null) {
-			address.setAddressLine1(customerRequest.getCity());
+		if (customerRequest.getAddress().getCity() != null) {
+			address.setAddressLine1(customerRequest.getAddress().getCity());
 		}
-		if (customerRequest.getState() != null) {
-			address.setAddressLine1(customerRequest.getState());
+		if (customerRequest.getAddress().getState() != null) {
+			address.setAddressLine1(customerRequest.getAddress().getState());
 		}
-		if (customerRequest.getPincode() != null) {
-			address.setAddressLine1(customerRequest.getPincode());
+		if (customerRequest.getAddress().getPincode() != null) {
+			address.setAddressLine1(customerRequest.getAddress().getPincode());
 		}
 
 		updatedCustomer.setAddress(address);

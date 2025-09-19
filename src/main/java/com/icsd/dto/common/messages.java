@@ -77,4 +77,5 @@ public class messages {
 	public static final String CUSTOMER_DELETE = "Customer deleted";
 	public static final String CUSTOMER_UPDATE = "Details Updated";
 
+    public static final String INVALID_CLIENT = "UNSUPPORTED CLIENT TYPE" ;
 }

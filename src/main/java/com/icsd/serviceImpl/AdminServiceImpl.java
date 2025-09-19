@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import com.icsd.service.AddressClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -43,16 +44,20 @@ public class AdminServiceImpl implements AdminService {
 	@Autowired
 	AddressRepo addressRepo;
 
+   @Autowired
+    AddressClientService addressClientService;
+
 	private Validator validator;
 
 	@Value("${customer.expiry.days}")
 	private int expiryDays;
 
-	public AdminServiceImpl(CustomerRepo customerRepo, AddressRepo addressRepo,
-			@Value("${customer.expiry.days}") int expiryDays, Validator validator) {
+	public AdminServiceImpl(CustomerRepo customerRepo, AddressRepo addressRepo, AddressClientService addressClientService,
+                            @Value("${customer.expiry.days}") int expiryDays, Validator validator) {
 		this.customerRepo = customerRepo;
 		this.addressRepo = addressRepo;
-		this.expiryDays = expiryDays;
+        this.addressClientService = addressClientService;
+        this.expiryDays = expiryDays;
 		this.validator = validator;
 
 	}
@@ -97,7 +102,7 @@ public class AdminServiceImpl implements AdminService {
 		log.info("emails present in database");
 		try {
 			List<Customer> customersToSave = ExcelHelper.convertExcelToListOfCustomers(file.getInputStream(),
-					addressRepo, expiryDays, validator, rowErrors, dbEmails);
+					addressRepo, expiryDays, validator, addressClientService,rowErrors, dbEmails);
 
 			if (!customersToSave.isEmpty()) {
 				customerRepo.saveAll(customersToSave);

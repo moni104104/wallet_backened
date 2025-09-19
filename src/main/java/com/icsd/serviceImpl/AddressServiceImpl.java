@@ -2,10 +2,10 @@ package com.icsd.serviceImpl;
 
 import java.util.List;
 
+import com.icsd.model.Address;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.icsd.model.Address;
 import com.icsd.repo.AddressRepo;
 import com.icsd.service.AddressService;
 
