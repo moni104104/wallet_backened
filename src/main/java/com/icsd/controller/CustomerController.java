@@ -150,10 +150,6 @@ DynamicSchedulerService schedulerService;
             return new ResponseEntity<>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),
                     messages.SCHEDULER_FAILED), HttpStatus.INTERNAL_SERVER_ERROR);
 
-        } catch (Exception e) {
-            log.error("User authentication failed", e);
-            return new ResponseEntity<>(new ApiResponse(HttpStatus.UNAUTHORIZED.value(),
-                    messages.INVALID_USER), HttpStatus.UNAUTHORIZED);
         }
     }
 
