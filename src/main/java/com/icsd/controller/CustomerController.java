@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import com.icsd.serviceImpl.DynamicSchedulerService;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -50,7 +52,8 @@ public class CustomerController {
 	@Autowired
 	private PdfService pdfService;
 
-
+@Autowired
+DynamicSchedulerService schedulerService;
 
     @PostMapping(value = "/customer")
     public ResponseEntity<ApiResponse> createCustomer(@RequestBody @Valid CustomerRequestDto customerRequest) {
@@ -129,15 +132,40 @@ public class CustomerController {
 		return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.OK);
 	}
 
-	@PostMapping(value = "/customer/isValid")
-	public ResponseEntity<ApiResponse> isValidUser(@RequestBody @Valid CustomerLoginDTO customerLogin) {
-		log.info("authenticating user - valid or not ");
-		System.out.println(customerLogin);
-		Customer customer = customerService.isValidCustByEmailidAndPwd(customerLogin);
-		ApiResponse apiresponse = new ApiResponse(HttpStatus.OK.value(), messages.VALID_USER, customer);
 
-		return new ResponseEntity<ApiResponse>(apiresponse, HttpStatus.OK);
-	}
+    @PostMapping(value = "/customer/isValid")
+    public ResponseEntity<ApiResponse> isValidUser(@RequestBody @Valid CustomerLoginDTO customerLogin) {
+        log.info("Authenticating user - valid or not");
+
+        try {
+            Customer customer = customerService.isValidCustByEmailidAndPwd(customerLogin);
+             log.info("call dynamic scheduler service form controllr");
+            schedulerService.scheduleWelcomeEmail(customer.getEmailId(), customer.getFirstName());
+
+            ApiResponse apiresponse = new ApiResponse(HttpStatus.OK.value(), messages.VALID_USER, customer);
+            return new ResponseEntity<>(apiresponse, HttpStatus.OK);
+
+        } catch (SchedulerException e) {
+            log.error("Failed to schedule welcome email", e);
+            return new ResponseEntity<>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                    messages.SCHEDULER_FAILED), HttpStatus.INTERNAL_SERVER_ERROR);
+
+        } catch (Exception e) {
+            log.error("User authentication failed", e);
+            return new ResponseEntity<>(new ApiResponse(HttpStatus.UNAUTHORIZED.value(),
+                    messages.INVALID_USER), HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+
+//	@PostMapping(value = "/customer/isValid")
+//	public ResponseEntity<ApiResponse> isValidUser(@RequestBody @Valid CustomerLoginDTO customerLogin) {
+//		log.info("authenticating user - valid or not ");
+//		Customer customer = customerService.isValidCustByEmailidAndPwd(customerLogin);
+//		ApiResponse apiresponse = new ApiResponse(HttpStatus.OK.value(), messages.VALID_USER, customer);
+//
+//		return new ResponseEntity<ApiResponse>(apiresponse, HttpStatus.OK);
+//	}
 
 	@GetMapping("/customer/email/{emailId}")
 	public ResponseEntity<ApiResponse> getCustomerDataByEmailId(@PathVariable("emailId") String emailId) {
