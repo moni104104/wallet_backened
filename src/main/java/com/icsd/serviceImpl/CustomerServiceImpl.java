@@ -4,9 +4,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import com.icsd.annotation.ValidEmailAOP;
 import com.icsd.dto.request.AddressDto;
 import com.icsd.model.Address;
 import com.icsd.service.AddressClientService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,21 +32,26 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class CustomerServiceImpl implements CustomerService {
+@Autowired
+    CustomerRepo customerRepo;
+@Autowired
+AddressRepo addressRepo;
+    @Value("${customer.expiry.days}")
+int expiryDays;
+    @Autowired
+     AddressClientService addressClientService;
 
-	private final CustomerRepo customerRepo;
-	private final AddressRepo addressRepo;
-	private final int expiryDays;
-    private final AddressClientService addressClientService;
+
+//    public CustomerServiceImpl(CustomerRepo customerRepo, AddressRepo addressRepo,
+//                               @Value("${customer.expiry.days}") int expiryDays, Validator validator, AddressClientService addressClientService) {
+//		this.customerRepo = customerRepo;
+//		this.addressRepo = addressRepo;
+//		this.expiryDays = expiryDays;
+//        this.addressClientService = addressClientService;
+//
+//    }
 
 
-    public CustomerServiceImpl(CustomerRepo customerRepo, AddressRepo addressRepo,
-                               @Value("${customer.expiry.days}") int expiryDays, Validator validator, AddressClientService addressClientService) {
-		this.customerRepo = customerRepo;
-		this.addressRepo = addressRepo;
-		this.expiryDays = expiryDays;
-        this.addressClientService = addressClientService;
-
-    }
 
 	@Override
 	public Integer createCustomer(@Valid CustomerRequestDto crDto) {
@@ -72,16 +79,12 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public Customer isValidCustByEmailidAndPwd(@Valid CustomerLoginDTO customerLogin) {
-		log.info("Inside customer service to chek whether user is valid or not" + customerLogin);
+    @ValidEmailAOP
+	public Customer isValidCustByEmailidAndPwd(                                                                                          CustomerLoginDTO customerLogin) {
+		log.info("Inside customer service to check whether user is valid or not" + customerLogin);
 
 		Optional<Customer> optCust = customerRepo.findByEmailIdAndPassword(customerLogin.getEmailId(),
 				customerLogin.getPassword());
-		if (optCust.isEmpty()) {
-			log.info("customer is not existing for email id " + customerLogin.getEmailId() + " and pwd= "
-					+ customerLogin.getPassword());
-			throw new ResourceNotFoundException(messages.RESOURCE_NOT_FOUND);
-		}
 		Customer customer = optCust.get();
 		return customer;
 	}
