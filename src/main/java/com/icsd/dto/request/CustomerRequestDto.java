@@ -15,6 +15,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -37,6 +38,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class CustomerRequestDto {
 
 	@NotBlank(message = messages.NOT_BLANK)
@@ -55,7 +57,7 @@ public class CustomerRequestDto {
 	
 	@NotBlank(message = messages.NOT_BLANK)
 	@NotNull(message=messages.NOT_NULL)
-    @Pattern(regexp = "^[0-9]{10}$", message = messages.CONTACT_PATTERN )
+    @Pattern(regexp = messages.CONTACT_PATTERN, message = messages.CONTACT_PATTERN_MSG )
 	private String contactNo;
 	
 	private Gender gender;
@@ -63,7 +65,7 @@ public class CustomerRequestDto {
 	
 	@NotBlank(message = messages.NOT_BLANK)
 	@NotNull(message=messages.NOT_NULL)
-	@Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$", message=messages.PASSWORD_PATTERN)
+	@Pattern(regexp = messages.PASSWORD_PATTERN, message=messages.PASSWORD_PATTERN_MESSAGE)
 	private String  password;
 	@NotBlank(message = messages.NOT_BLANK)
 	@NotNull(message=messages.NOT_NULL)

@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
 @Slf4j
+@Configuration
 public class QuartzConfig {
 
     @Autowired
@@ -19,8 +19,8 @@ public class QuartzConfig {
     private ApplicationContext applicationContext;
 
     @PostConstruct
-    public void init() throws SchedulerException{
+    public void init() throws SchedulerException {
         log.info("inside quartz configuration");
-        scheduler.getContext().put("applicationContext",applicationContext);
+        scheduler.getContext().put("applicationContext", applicationContext);
     }
 }

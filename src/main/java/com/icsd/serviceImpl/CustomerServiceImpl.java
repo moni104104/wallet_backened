@@ -7,6 +7,7 @@ import java.util.Optional;
 import com.icsd.dto.request.AddressDto;
 import com.icsd.model.Address;
 import com.icsd.service.AddressClientService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,21 +31,26 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class CustomerServiceImpl implements CustomerService {
+@Autowired
+	 CustomerRepo customerRepo;
 
-	private final CustomerRepo customerRepo;
-	private final AddressRepo addressRepo;
-	private final int expiryDays;
-    private final AddressClientService addressClientService;
+    @Autowired
+    AddressRepo addressRepo;
+    @Value("${customer.expiry.days}")
+    int expiryDays;
 
+    @Autowired
+    AddressClientService addressClientService;
 
-    public CustomerServiceImpl(CustomerRepo customerRepo, AddressRepo addressRepo,
-                               @Value("${customer.expiry.days}") int expiryDays, Validator validator, AddressClientService addressClientService) {
-		this.customerRepo = customerRepo;
-		this.addressRepo = addressRepo;
-		this.expiryDays = expiryDays;
-        this.addressClientService = addressClientService;
-
-    }
+//
+//    public CustomerServiceImpl(CustomerRepo customerRepo, AddressRepo addressRepo,
+//                               @Value("${customer.expiry.days}") int expiryDays, Validator validator, AddressClientService addressClientService) {
+//		this.customerRepo = customerRepo;
+//		this.addressRepo = addressRepo;
+//		this.expiryDays = expiryDays;
+//        this.addressClientService = addressClientService;
+//
+//    }
 
 	@Override
 	public Integer createCustomer(@Valid CustomerRequestDto crDto) {
@@ -66,9 +72,10 @@ public class CustomerServiceImpl implements CustomerService {
 				.emailId(crDto.getEmailId()).contactNo(crDto.getContactNo()).address(savedAddress)
 				.gender(crDto.getGender()).password(crDto.getPassword()).registrationDate(LocalDate.now())
 				.expiryDate(LocalDate.now().plusDays(expiryDays)).status(crDto.getStatus()).build();
-		log.info("cust entity is now from builder : " + cust);
 		Customer custCreated = customerRepo.save(cust);
-		return custCreated.getCustomerId();
+        log.info("cust entity is now from builder : " + custCreated);
+
+        return custCreated.getCustomerId();
 	}
 
 	@Override
@@ -88,7 +95,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public List<CustomerFnmLnmGenderDTO> findByLastName(String lnm) {
-
+        log.info("inside customer service return matching list of Customers");
 		List<CustomerFnmLnmGenderDTO> lst = customerRepo.findByLastName(lnm);
 		return lst;
 	}
@@ -107,7 +114,8 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public List<Customer> findByFirstNameContaining(String fn) {
-		List<Customer> list = customerRepo.findByFirstNameContaining(fn);
+        log.info("inside customer service return Customers having substring ");
+        List<Customer> list = customerRepo.findByFirstNameContaining(fn);
 		return list;
 	}
 
@@ -178,16 +186,16 @@ public class CustomerServiceImpl implements CustomerService {
 			address.setAddressLine1(customerRequest.getAddress().getAddressLine1());
 		}
 		if (customerRequest.getAddress().getAddressLine2() != null) {
-			address.setAddressLine1(customerRequest.getAddress().getAddressLine2());
+			address.setAddressLine2(customerRequest.getAddress().getAddressLine2());
 		}
 		if (customerRequest.getAddress().getCity() != null) {
-			address.setAddressLine1(customerRequest.getAddress().getCity());
+			address.setCity(customerRequest.getAddress().getCity());
 		}
 		if (customerRequest.getAddress().getState() != null) {
-			address.setAddressLine1(customerRequest.getAddress().getState());
+			address.setState(customerRequest.getAddress().getState());
 		}
 		if (customerRequest.getAddress().getPincode() != null) {
-			address.setAddressLine1(customerRequest.getAddress().getPincode());
+			address.setPincode(customerRequest.getAddress().getPincode());
 		}
 
 		updatedCustomer.setAddress(address);
@@ -199,12 +207,10 @@ public class CustomerServiceImpl implements CustomerService {
 
 	}
 	
-	
-
 
 	@Override
 	public Page<Customer> getAllCustomer(Pageable pageable) {
-		return customerRepo.findAll(pageable);
+        return customerRepo.findAll(pageable);
 	}
 
 	@Override
@@ -213,23 +219,5 @@ public class CustomerServiceImpl implements CustomerService {
                 keyword, keyword, pageable);
 	}
 
-
-//	@Override
-//	public List<Customer> searchCustomer(String firstName, String emailId) {
-//		if(emailId != null && firstName != null ) {
-//            return customerRepo.findByFirstNameAndEmailIdContainingIgnoreCase(firstName, emailId);	
-//		}
-//		else if(firstName!=null){
-//            return customerRepo.findByFirstNameContainingIgnoreCase(firstName);
-//
-//		}
-//		else if(emailId!=null) {
-//            return customerRepo.findByEmailIdContainingIgnoreCase(emailId);
-//
-//		}
-//		else {
-//			return customerRepo.findAll();
-//		}
-//	}
 
 }

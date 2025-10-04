@@ -1,23 +1,14 @@
 package com.icsd.model;
 
-import java.time.LocalDate;
-import java.util.List;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.SequenceGenerator;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Builder
@@ -26,31 +17,31 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Account {
 
-	@Id
-	@SequenceGenerator(name = "generator", sequenceName = "accidSeq", allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
-	private int accountNumber;
+    @Id
+    @SequenceGenerator(name = "generator", sequenceName = "accidSeq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
+    private int accountNumber;
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "customerFk")
+    private Customer customer;
+    @Enumerated(EnumType.STRING)
+    private AccountType accountType;
+    private double openingBalance;
+    private LocalDate openingDate = LocalDate.now();
+    private String description;
 
-	@ManyToOne
-	@JoinColumn(name = "customerFk")
-	private Customer customer;
-	@Enumerated(EnumType.STRING)
-	private AccountType accountType;
-	private double openingBalance;
-	private LocalDate openingDate = LocalDate.now();
-	private String description;
+    @OneToMany(mappedBy = "fromAccountNumber", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Transaction> sentTransactions;
 
-	@OneToMany(mappedBy = "fromAccountNumber", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Transaction> sentTransactions;
+    @OneToMany(mappedBy = "toAccountNumber", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Transaction> receivedTransactions;
 
-	@OneToMany(mappedBy = "toAccountNumber", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Transaction> receivedTransactions;
-
-	@Override
-	public String toString() {
-		return "Account [accountNumber=" + accountNumber + ", customer=" + " accountType=" + accountType
-				+ ", openingBalance=" + openingBalance + ", openingDate=" + openingDate + ", description=" + description
-				+ "]";
-	}
+    @Override
+    public String toString() {
+        return "Account [accountNumber=" + accountNumber + ", customer=" + " accountType=" + accountType
+                + ", openingBalance=" + openingBalance + ", openingDate=" + openingDate + ", description=" + description
+                + "]";
+    }
 
 }

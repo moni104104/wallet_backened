@@ -1,12 +1,20 @@
 package com.icsd.dto.response;
 
 import com.icsd.model.Gender;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public interface CustomerFnmLnmGenderDTO {
-	String getFirstName();
+@AllArgsConstructor
+@Data
+@NoArgsConstructor
+@Builder
+public class CustomerFnmLnmGenderDTO {
+	String firstName;
 
-	String getLastName();
+	 String lastName;
 
-	Gender getGender();
+	Gender gender;
 
 }

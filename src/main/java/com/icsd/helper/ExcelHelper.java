@@ -1,18 +1,20 @@
 package com.icsd.helper;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import com.icsd.dto.common.messages;
 import com.icsd.dto.request.AddressDto;
+import com.icsd.dto.request.CustomerExcelImportDto;
+import com.icsd.dto.request.CustomerRequestDto;
+import com.icsd.dto.request.RowError;
 import com.icsd.model.Address;
+import com.icsd.model.Customer;
+import com.icsd.model.Gender;
+import com.icsd.model.SubscriptionStatus;
+import com.icsd.repo.AddressRepo;
 import com.icsd.service.AddressClientService;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
@@ -22,18 +24,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.icsd.dto.common.messages;
-import com.icsd.dto.request.CustomerRequestDto;
-import com.icsd.dto.request.RowError;
-import com.icsd.model.Customer;
-import com.icsd.model.Gender;
-import com.icsd.model.SubscriptionStatus;
-import com.icsd.repo.AddressRepo;
-
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.io.InputStream;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Data
@@ -64,21 +59,16 @@ public class ExcelHelper {
         }
     }
 
-    /**
-     *
-     * @param is
-     * @param addressRepo
-     * @param expiryDays
-     * @param validator
-     * @param rowErrors
-     * @param dbEmails
-     * @return this function returns list of customers from an excel document
-     */
 
-    public static List<Customer> convertExcelToListOfCustomers(InputStream is, AddressRepo addressRepo, int expiryDays,
-                                                               Validator validator, AddressClientService addressClientService, List<RowError> rowErrors, Set<String> dbEmails) {
+    public static List<Customer> convertExcelToListOfCustomers(InputStream is, CustomerExcelImportDto excelDto) {
+
         log.info("Inside Excel helper");
-
+        AddressRepo addressRepo = excelDto.getAddressRepo();
+        int expiryDays = excelDto.getExpiryDays();
+        Validator validator = excelDto.getValidator();
+        AddressClientService addressClientService = excelDto.getAddressClientService();
+        List<RowError> rowErrors = excelDto.getRowErrors();
+        Set<String> dbEmails = excelDto.getExistingEmails();
         List<Customer> customerList = new ArrayList<>();
         Set<String> fileEmails = new HashSet<>();
 
@@ -205,7 +195,7 @@ public class ExcelHelper {
                     }
 
 
-                    log.info("adress dto after saved "+savedAddress.getAddressId());
+                    log.info("adress dto after saved " + savedAddress.getAddressId());
 //					Address savedAddress = addressRepo.save(address);
                     log.info("saved address to database");
                     Customer customer = new Customer();

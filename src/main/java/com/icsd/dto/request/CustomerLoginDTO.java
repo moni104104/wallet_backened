@@ -7,13 +7,15 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
+@Builder
 public class CustomerLoginDTO {
 
 	@NotBlank(message = messages.NOT_BLANK)
@@ -23,7 +25,7 @@ public class CustomerLoginDTO {
 
 	@NotBlank(message = messages.NOT_BLANK)
 	@NotNull(message = messages.NOT_NULL)
-	@Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$", message = messages.PASSWORD_PATTERN)
+	@Pattern(regexp = messages.PASSWORD_PATTERN, message = messages.PASSWORD_PATTERN_MESSAGE)
 	private String password;
 
 }
