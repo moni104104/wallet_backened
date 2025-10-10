@@ -1,7 +1,9 @@
 package com.icsd.model;
 
 import java.time.LocalDate;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -10,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,6 +39,12 @@ public class Account {
 	private double openingBalance;
 	private LocalDate openingDate = LocalDate.now();
 	private String description;
+
+	@OneToMany(mappedBy = "fromAccountNumber", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Transaction> sentTransactions;
+
+	@OneToMany(mappedBy = "toAccountNumber", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Transaction> receivedTransactions;
 
 	@Override
 	public String toString() {

@@ -30,9 +30,12 @@ import com.icsd.repo.AddressRepo;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Data
+
 public class ExcelHelper {
 
 //	Check excel file format
@@ -69,8 +72,7 @@ public class ExcelHelper {
 	 * @param dbEmails
 	 * @return this function returns list of customers from an excel document
 	 */
-	
-	
+
 	public static List<Customer> convertExcelToListOfCustomers(InputStream is, AddressRepo addressRepo, int expiryDays,
 			Validator validator, List<RowError> rowErrors, Set<String> dbEmails) {
 		log.info("Inside Excel helper");
@@ -94,8 +96,8 @@ public class ExcelHelper {
 
 					int totalColumns = sheet.getRow(0).getLastCellNum();
 					log.info("get the total columns from excel ");
-					List<String> errorsForThisRow =new ArrayList<>();
-					
+					List<String> errorsForThisRow = new ArrayList<>();
+
 					for (int cid = 0; cid < totalColumns; cid++) {
 						Cell cell = row.getCell(cid, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
 						String cellValue = getCellValueAsString(cell).trim();
@@ -152,30 +154,28 @@ public class ExcelHelper {
 						log.info("constraint violations");
 						String errorMsg = violations.stream().map(v -> v.getPropertyPath() + ": " + v.getMessage())
 								.collect(Collectors.joining("; "));
-						errorsForThisRow.add(messages.DATA_VALIDATION+ errorMsg);
+						errorsForThisRow.add(messages.DATA_VALIDATION + errorMsg);
 
 					}
 
 					String email = dto.getEmailId();
 					if (fileEmails.contains(email)) {
-						errorsForThisRow.add(messages.DUPLICATE_EMAILS_FILE+ email);
+						errorsForThisRow.add(messages.DUPLICATE_EMAILS_FILE + email);
 
 					}
 					fileEmails.add(email);
 
 					if (dbEmails.contains(email)) {
-						errorsForThisRow.add(messages.DUPLICATE_EMAILS+ email);
+						errorsForThisRow.add(messages.DUPLICATE_EMAILS + email);
 
 					}
 
-					
-					if(!errorsForThisRow.isEmpty()) {
+					if (!errorsForThisRow.isEmpty()) {
 						String combinedError = String.join(" | ", errorsForThisRow);
 						rowErrors.add(new RowError(rowNumber, combinedError));
 						continue;
 					}
-					
-					
+
 					Address address = new Address();
 					address.setAddressLine1(dto.getAddressLine1());
 					address.setAddressLine2(dto.getAddressLine2());

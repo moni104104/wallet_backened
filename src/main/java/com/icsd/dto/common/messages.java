@@ -72,5 +72,9 @@ public class messages {
 	public static final String SHEET = "Sheet1";
 	public static final String RUN_TIME_EXCEPTION = "Failed to read Excel file: ";
 	public static final String PWD_NOT_MATCH = "Password and Confirm Password do not match.";
+	public static final String VALID_ADMIN = "valid Admin";
+	public static final String ADMIN_CREATE = "admin created successfully";
+	public static final String CUSTOMER_DELETE = "Customer deleted";
+	public static final String CUSTOMER_UPDATE = "Details Updated";
 
 }

@@ -33,7 +33,13 @@ public interface CustomerRepo extends JpaRepository<Customer, Integer> {
 
 	Customer getCustomerByEmailId(String custEmailId);
 
-    @Query("SELECT c.emailId FROM Customer c")
+	@Query("SELECT c.emailId FROM Customer c")
 	Set<String> findAllEmails();
+
+	List<Customer> findByFirstNameAndEmailIdContainingIgnoreCase(String firstName, String emailId);
+
+	List<Customer> findByFirstNameContainingIgnoreCase(String firstName);
+
+	List<Customer> findByEmailIdContainingIgnoreCase(String emailId);
 
 }
