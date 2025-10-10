@@ -31,9 +31,11 @@ public class Account {
     private LocalDate openingDate = LocalDate.now();
     private String description;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "fromAccountNumber", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transaction> sentTransactions;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "toAccountNumber", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transaction> receivedTransactions;
 

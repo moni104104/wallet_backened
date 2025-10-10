@@ -79,40 +79,9 @@ public class messages {
     public static final String ADMIN_CREATE = "admin created successfully";
     public static final String CUSTOMER_DELETE = "Customer deleted";
     public static final String CUSTOMER_UPDATE = "Details Updated";
-	public static final String DATA_VALIDATION = "validation failed : ";
-
-	public static final String OPENING_BAL_MIN = "opening balance must be between 1-1000";
-	public static final String OPENING_BAL_MAX = "opening balance must be between 1-1000";
-
-	public static final String AMOUNT_MIN = "Amount must be between 1-10000";
-	public static final String AMOUNT_MAX = "Amount must be between 1-10000";
-	public static final String ACCOUNT_NUMBER_MIN = "account number must be greater than  1";
-
-	public static final String NOT_BLANK = "field can not be blank";
-	public static final String NOT_NULL = "field can not be null";
-	public static final String NAME_SIZE = "name should be between 2 to 60 characters";
-    public static final String EMAIL_PATTERN = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-
-	public static final String EMAIL = "please enter valid email id";
-    public static final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
-    public static final String PASSWORD_PATTERN_MESSAGE = "password shoulde be 8 characters long and must contain an uppercase alphabet,a lowercase alphabet, a digit, and a special character";
-	public static final String CONTACT_PATTERN = "Contact number must be of exactly 10 digits";
-	public static final String PINCODE_PATTERN = "Pincode must be of exactly 6 digits";
-
-//SCHEDULERS
-	public static final String SUBSCRIPTION_SUBJECT = "your Subscription is expiring soon";
-	public static final String DUPLICATE_EMAILS = "Email already exists in DB: ";
-	public static final String DUPLICATE_EMAILS_FILE = "Duplicate email in file: ";
-	public static final String SHEET = "Sheet1";
-	public static final String RUN_TIME_EXCEPTION = "Failed to read Excel file: ";
-	public static final String PWD_NOT_MATCH = "Password and Confirm Password do not match.";
-	public static final String VALID_ADMIN = "valid Admin";
-	public static final String ADMIN_CREATE = "admin created successfully";
-	public static final String CUSTOMER_DELETE = "Customer deleted";
-	public static final String CUSTOMER_UPDATE = "Details Updated";
-    public static final String INVALID_CLIENT = "UNSUPPORTED CLIENT TYPE" ;
+    public static final String INVALID_CLIENT = "UNSUPPORTED CLIENT TYPE";
     public static final String NOT_EXIST = "Invalid Email or Customer does not exist";
-    public static final String EMAIL_NOT_NULL =  "Email cannot be blank";
+    public static final String EMAIL_NOT_NULL = "Email cannot be blank";
     public static final String SCHEDULER_FAILED = "Login successful but failed to schedule email";
     public static final String INVALID_USER = "Invalid login credentials";
     public static final String EMAIL_SUBJECT = "Welcome Email!";
