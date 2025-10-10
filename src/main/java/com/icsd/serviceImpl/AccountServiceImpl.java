@@ -17,7 +17,6 @@ import com.icsd.repo.AccountRepo;
 import com.icsd.repo.CustomerRepo;
 import com.icsd.service.AccountService;
 
-import jakarta.validation.Valid;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,7 +34,7 @@ public class AccountServiceImpl implements AccountService{
 	public int saveAccount(AccountRequestDTO accReq) {
 		
 		log.info("create a new account");
-		Optional<Customer> optionalCust= customerRepo.findById(accReq.getCustomerId());
+		Optional<Customer> optionalCust = customerRepo.findById(accReq.getCustomerId());
 		if(!optionalCust.isPresent())
 		{
 			throw new ResourceNotFoundException(messages.RESOURCE_NOT_FOUND);
@@ -63,10 +62,10 @@ public class AccountServiceImpl implements AccountService{
 		log.info("getting accounts by custid for customer id "+ intCustid);
 		
 		List<Account>  listAccounts=accountRepo.findByCustomerCustomerId(intCustid);
-		if(listAccounts.isEmpty())
-		{
-			throw new ResourceNotFoundException(messages.RESOURCE_NOT_FOUND+ intCustid);
-		}
+//		if(listAccounts.isEmpty())
+//		{
+//			throw new ResourceNotFoundException(messages.RESOURCE_NOT_FOUND+ intCustid);
+//		}
 		return listAccounts;
 	}
 

@@ -19,10 +19,8 @@ public interface TransactionService {
 
 	Transaction fundTransferFunction( @Valid FundTransferRequestDTO tdReq);
 
+	public List<Transaction> getTransactionsByCustomerId(int customerId);
 
-
-	//List<Transaction> getTransactionsByAccountNumber(int accountNumber);
-
-
+	// List<Transaction> getTransactionsByAccountNumber(int accountNumber);
 
 }

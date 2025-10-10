@@ -1,15 +1,13 @@
 package com.icsd.exception;
 
-public class ResourceNotFoundException  extends RuntimeException{
-	
-	public ResourceNotFoundException()
-	{
-		
+public class ResourceNotFoundException extends RuntimeException {
+
+	public ResourceNotFoundException() {
+
 	}
-	public ResourceNotFoundException(String msg)
-	{
+
+	public ResourceNotFoundException(String msg) {
 		super(msg);
 	}
-	
 
 }

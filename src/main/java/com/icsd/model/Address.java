@@ -32,4 +32,6 @@ private String state;
 @Column(length=6)
 private String pincode;
 
+
+
 }

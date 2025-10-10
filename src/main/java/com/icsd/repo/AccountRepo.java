@@ -11,7 +11,7 @@ import com.icsd.model.Account;
 import com.icsd.model.AccountType;
 import com.icsd.model.Customer;
 
-public interface AccountRepo extends JpaRepository<Account,Integer> {
+public interface AccountRepo extends JpaRepository<Account, Integer> {
 
 	List<Account> findByCustomerCustomerId(int intCustid);
 
@@ -20,8 +20,8 @@ public interface AccountRepo extends JpaRepository<Account,Integer> {
 	List<Account> findByOrderByOpeningBalanceAsc();
 
 	List<Account> findByOpeningDateAfter(LocalDate dt);
-	
-   Optional<Account> findByAccountNumberAndCustomer(int accountNumber,Customer customer);
+
+	Optional<Account> findByAccountNumberAndCustomer(int accountNumber, Customer customer);
 
 	List<Account> findByOpeningDateBetween(LocalDate startDate, LocalDate endDate);
 
@@ -31,7 +31,5 @@ public interface AccountRepo extends JpaRepository<Account,Integer> {
 
 	@Query(value = "select DISTINCT(a.accountType) from Account a")
 	List<String> getDistinctAccountType();
-
-
 
 }

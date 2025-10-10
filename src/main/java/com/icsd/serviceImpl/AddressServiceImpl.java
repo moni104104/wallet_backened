@@ -15,13 +15,13 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class AddressServiceImpl implements AddressService {
 
-	
 	@Autowired
 	AddressRepo addressRepo;
+
 	@Override
 	public List<Address> findByAddressLine2IsNull() {
 		log.info("inside service Impl address findByAddressLine2IsNull");
-		List<Address> list=addressRepo.findByAddressLine2IsNull();
+		List<Address> list = addressRepo.findByAddressLine2IsNull();
 		return list;
 	}
 
@@ -29,8 +29,15 @@ public class AddressServiceImpl implements AddressService {
 	public List<Address> findByAddressLine2IsNotNull() {
 		log.info("inside service Impl address findByAddressLine2IsNotNull");
 
-		List<Address> list=addressRepo.findByAddressLine2IsNotNull();
+		List<Address> list = addressRepo.findByAddressLine2IsNotNull();
 		return list;
 	}
+
+//	@Override
+//	public Optional<Address> getAddressByCustomerId(int customerId) {
+//		log.info("inside service to getAddressByCustomerId" + customerId);
+//		Optional<Address> add = addressRepo.findByCustomerCustomerId(customerId);
+//		return add;
+//	}
 
 }

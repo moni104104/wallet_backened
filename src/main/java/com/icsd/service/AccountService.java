@@ -8,9 +8,6 @@ import com.icsd.model.Account;
 import com.icsd.model.AccountType;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 public interface AccountService {
 

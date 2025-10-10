@@ -3,13 +3,15 @@ package com.icsd.repo;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import com.icsd.dto.response.CustomerFnmLnmGenderDTO;
 import com.icsd.model.Customer;
 
-public interface CustomerRepo extends JpaRepository<Customer,Integer> {
+public interface CustomerRepo extends JpaRepository<Customer, Integer> {
 
 	Optional<Customer> findByEmailId(String emailId);
 
@@ -27,8 +29,11 @@ public interface CustomerRepo extends JpaRepository<Customer,Integer> {
 
 	List<Customer> findByFirstNameContaining(String fn);
 
-    List<Customer> findByExpiryDate(LocalDate expiryDate );
-    
+	List<Customer> findByExpiryDate(LocalDate expiryDate);
+
 	Customer getCustomerByEmailId(String custEmailId);
+
+    @Query("SELECT c.emailId FROM Customer c")
+	Set<String> findAllEmails();
 
 }

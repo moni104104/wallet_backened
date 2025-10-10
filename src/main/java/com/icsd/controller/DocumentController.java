@@ -1,17 +1,15 @@
 package com.icsd.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,18 +20,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.icsd.dto.common.ApiResponse;
 import com.icsd.dto.common.messages;
 import com.icsd.dto.request.DocumentRequestDTO;
-import com.icsd.model.Customer;
 import com.icsd.model.Document;
 import com.icsd.model.DocumentType;
-import com.icsd.repo.DocumentRepo;
 import com.icsd.service.DocumentService;
 
 import jakarta.validation.Valid;
@@ -51,7 +45,7 @@ DocumentService documentService;
 	public ResponseEntity<ApiResponse> uploadDocuments(@Valid @ModelAttribute DocumentRequestDTO dr) throws IOException{
 	  log.info("inside document controller to save document");
 		Document document = documentService.saveDocument(dr);
-		ApiResponse apiResponse = new ApiResponse(HttpStatus.OK.value(),messages.DOCUMENT_UPLOAD);
+		ApiResponse apiResponse = new ApiResponse(HttpStatus.OK.value(),messages.DOCUMENT_UPLOAD,document);
 		return new ResponseEntity<ApiResponse> (apiResponse,HttpStatus.OK);
 	}
 	
@@ -134,13 +128,13 @@ ApiResponse apiresponse=new ApiResponse(HttpStatus.FOUND.value(), messages.DOCUM
 	
 	@GetMapping("/documents/{customerId}")
 	public ResponseEntity<ApiResponse>getDocumentsByCustomerId(@PathVariable("customerId") int customerId){
-	Optional<Document> docs=documentService.getDocumentsByCustomerId(customerId);
-		if(!docs.isPresent()) {
+	List<Document> listDocuments=documentService.getDocumentsByCustomerId(customerId);
+		if(listDocuments.isEmpty()) {
 			ApiResponse apiresponse=new ApiResponse(HttpStatus.NOT_FOUND.value(), messages.NO_DOCUMENT);
 			return new ResponseEntity<ApiResponse>(apiresponse,HttpStatus.NOT_FOUND);	
 		}
 		log.info("in controller-- docs found for given customerid"+customerId);
-ApiResponse apiresponse=new ApiResponse(HttpStatus.FOUND.value(),messages.DOCUMENT_FOUND);
+ApiResponse apiresponse=new ApiResponse(HttpStatus.FOUND.value(),messages.DOCUMENT_FOUND,listDocuments);
 		return new ResponseEntity<>(apiresponse,HttpStatus.OK);
 	}
 	
