@@ -47,4 +47,5 @@ public interface CustomerRepo extends JpaRepository<Customer, Integer> {
 	Page<Customer> findByFirstNameContainingIgnoreCaseOrEmailIdContainingIgnoreCase(String keyword, String keyword2,
 			Pageable pageable);
 
+    boolean existsByEmailId(String emailId);
 }

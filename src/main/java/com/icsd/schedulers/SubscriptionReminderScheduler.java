@@ -22,7 +22,7 @@ public class SubscriptionReminderScheduler {
 	private final CustomerRepo customerRepo;
 	private final EmailService emailService;
 
-	@Scheduled(cron = "0 59 13 * * *")
+	@Scheduled(cron = "0 59 00 * * *")
 	public void sendExpiryReminders() {
 		LocalDate tomorrow = LocalDate.now().plusDays(9);
 		List<Customer> expiringCustomers = customerRepo.findByExpiryDate(tomorrow);

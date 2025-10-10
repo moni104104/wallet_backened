@@ -1,5 +1,6 @@
 package com.icsd.dto.request;
 
+import com.icsd.annotation.ValidEmail;
 import com.icsd.dto.common.messages;
 
 import jakarta.validation.constraints.Email;
@@ -15,15 +16,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 
 public class CustomerLoginDTO {
-
-	@NotBlank(message = messages.NOT_BLANK)
-	@NotNull(message = messages.NOT_NULL)
-	@Email(message = messages.EMAIL)
+//
+//	@NotBlank(message = messages.NOT_BLANK)
+//	@NotNull(message = messages.NOT_NULL)
+//   @Email(message = messages.EMAIL)
+  // @ValidEmail
 	private String emailId;
 
 	@NotBlank(message = messages.NOT_BLANK)
 	@NotNull(message = messages.NOT_NULL)
-	@Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$", message = messages.PASSWORD_PATTERN)
+	@Pattern(regexp = messages.PASSWORD_PATTERN, message=messages.PASSWORD_PATTERN_MESSAGE)
 	private String password;
 
 }
