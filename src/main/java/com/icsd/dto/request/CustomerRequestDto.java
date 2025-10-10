@@ -39,6 +39,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class CustomerRequestDto {
 
 	@NotBlank(message = messages.NOT_BLANK)
@@ -57,7 +58,7 @@ public class CustomerRequestDto {
 	
 	@NotBlank(message = messages.NOT_BLANK)
 	@NotNull(message=messages.NOT_NULL)
-    @Pattern(regexp = "^[0-9]{10}$", message = messages.CONTACT_PATTERN )
+    @Pattern(regexp = messages.CONTACT_PATTERN, message = messages.CONTACT_PATTERN_MSG )
 	private String contactNo;
 	
 	private Gender gender;

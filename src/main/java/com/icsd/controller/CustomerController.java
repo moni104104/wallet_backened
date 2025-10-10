@@ -46,41 +46,41 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CustomerController {
 
+private messages messages;
+
 	@Autowired
 	private CustomerService customerService;
 
 	@Autowired
 	private PdfService pdfService;
 
-@Autowired
-DynamicSchedulerService schedulerService;
+    @Autowired
+    DynamicSchedulerService schedulerService;
 
+
+    public void setMessages(messages messages) {
+        this.messages = messages;
+    }
     @PostMapping(value = "/customer")
     public ResponseEntity<ApiResponse> createCustomer(@RequestBody @Valid CustomerRequestDto customerRequest) {
         log.info("inside create method of customer controller");
-
         Integer generatedCustomerId = customerService.createCustomer(customerRequest);
-
         ApiResponse apiResponse = new ApiResponse(HttpStatus.OK.value(), messages.CUSTOMER_CREATE, generatedCustomerId);
         return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.OK);
-
     }
-
-
-
 
     @GetMapping("customer/{customerId}")
 	public ResponseEntity<ApiResponse> getCustomerByCustomerId(@PathVariable("customerId") int customerId) {
 		log.info("inside get method of customer controller");
-		Optional<Customer> cust = customerService.getCustomerByCustomerId(customerId);
-		if (!cust.isPresent()) {
+		Optional<Customer> optCust = customerService.getCustomerByCustomerId(customerId);
+		if (!optCust.isPresent()) {
 			log.info("no record found");
 			ApiResponse apiresponse = new ApiResponse(HttpStatus.NOT_FOUND.value(), messages.CUSTOMER_NOT_FOUND);
 			return new ResponseEntity<ApiResponse>(apiresponse, HttpStatus.NOT_FOUND);
 		}
 		log.info("customer found for given customer id");
+        Customer cust= optCust.get();
 		ApiResponse apiresponse = new ApiResponse(HttpStatus.FOUND.value(), messages.CUSTOMER_FOUND, cust);
-
 		return new ResponseEntity<>(apiresponse, HttpStatus.OK);
 
 	}
@@ -97,12 +97,11 @@ DynamicSchedulerService schedulerService;
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Disposition", "inline; filename= customer_" + customerId + ".pdf");
-
+        log.info("pdf generated successfully");
 		return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF).body(bis.readAllBytes());
 	}
 
 
-	
 	@DeleteMapping("/customer/{customerId}")
 	public ResponseEntity<ApiResponse> deleteCustomerByCustomerId(@PathVariable("customerId") int customerId) {
 		Optional<Customer> cust = customerService.getCustomerByCustomerId(customerId);
@@ -111,6 +110,7 @@ DynamicSchedulerService schedulerService;
 			throw new ResourceNotFoundException(messages.RESOURCE_NOT_FOUND);
 		}
 		customerService.deleteCustomerByCustomerId(customerId);
+        log.info("Customer deleted successfully");
 		ApiResponse apiResponse = new ApiResponse(HttpStatus.OK.value(), messages.CUSTOMER_DELETE);
 		return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.OK);
 	}
@@ -139,12 +139,12 @@ DynamicSchedulerService schedulerService;
 
         try {
             Customer customer = customerService.isValidCustByEmailidAndPwd(customerLogin);
-             log.info("call dynamic scheduler service form controllr");
+            log.info("Valid User");
+            log.info("call dynamic scheduler service form controllr");
             schedulerService.scheduleWelcomeEmail(customer.getEmailId(), customer.getFirstName());
 
             ApiResponse apiresponse = new ApiResponse(HttpStatus.OK.value(), messages.VALID_USER, customer);
             return new ResponseEntity<>(apiresponse, HttpStatus.OK);
-
         } catch (SchedulerException e) {
             log.error("Failed to schedule welcome email", e);
             return new ResponseEntity<>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),

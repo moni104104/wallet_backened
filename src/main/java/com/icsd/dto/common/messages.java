@@ -8,7 +8,7 @@ public class messages {
     public static final String UPLOAD_DIR = "C:\\Users\\Hp\\Desktop\\imgs";
 
     //CUSTOMER TABLE
-    public static final String VALID_USER = "user is validated";
+    public static final String VALID_USER = "Valid user";
     public static final String CUSTOMER_FOUND = "customer found ";
     public static final String CUSTOMER_CREATE = "Customer Created Successfully";
     public static final String CUSTOMER_NOT_FOUND = "no customer found";
@@ -41,8 +41,8 @@ public class messages {
 
 
     //EXCEPTION
-    public static final String RESOURCE_NOT_FOUND = "record not found";
-    public static final String EMAIL_ALREADY_EXIST = "Customer email id is already existing ";
+    public static final String RESOURCE_NOT_FOUND = "No record found";
+    public static final String EMAIL_ALREADY_EXIST = "Customer email id is already existing";
 
 //VALIDATION
 
@@ -63,7 +63,9 @@ public class messages {
     public static final String EMAIL = "please enter valid email id";
     public static final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
     public static final String PASSWORD_PATTERN_MESSAGE = "password shoulde be 8 characters long and must contain an uppercase alphabet,a lowercase alphabet, a digit, and a special character";
-    public static final String CONTACT_PATTERN = "Contact number must be of exactly 10 digits";
+    public static final String CONTACT_PATTERN_MSG = "Contact number must be of exactly 10 digits";
+    public static final String CONTACT_PATTERN = "^[0-9]{10}$";
+
     public static final String PINCODE_PATTERN = "Pincode must be of exactly 6 digits";
 
     //SCHEDULERS
