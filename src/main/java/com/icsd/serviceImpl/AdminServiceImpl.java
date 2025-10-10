@@ -21,6 +21,7 @@ import jakarta.validation.Validator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -52,6 +53,9 @@ public class AdminServiceImpl implements AdminService {
     @Value("${customer.expiry.days}")
     private int expiryDays;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     @Override
     public Admin isValidAdminByEmailidAndPwd(@Valid AdminLoginDto adminLogin) {
         log.info("Inside admin service to chek whether admin is valid or not" + adminLogin);
@@ -76,7 +80,7 @@ public class AdminServiceImpl implements AdminService {
         if (optAdmin.isPresent()) {
             throw new EntityAlreadyExistException(messages.EMAIL_ALREADY_EXIST);
         } else {
-            Admin admin = Admin.builder().emailId(arDto.getEmailId()).password(arDto.getPassword()).build();
+            Admin admin = Admin.builder().emailId(arDto.getEmailId()).password(passwordEncoder.encode(arDto.getPassword())).build();
             log.info("admin entity is now from builder : " + admin);
             adminRepo.save(admin);
             res = true;
@@ -124,5 +128,12 @@ public class AdminServiceImpl implements AdminService {
     public List<Customer> getAllCustomers() {
         List<Customer> customers = customerRepo.findAll();
         return customers;
+    }
+
+    @Override
+    public Optional<Admin> getAdminDataByEmailId(String emailId) {
+        log.info("inside ADMIN service to getAdminDataByEmailId" + emailId);
+        Optional<Admin> admin = adminRepo.findByEmailId(emailId);
+        return admin;
     }
 }

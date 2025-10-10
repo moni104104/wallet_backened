@@ -79,9 +79,9 @@ public class messages {
     public static final String ADMIN_CREATE = "admin created successfully";
     public static final String CUSTOMER_DELETE = "Customer deleted";
     public static final String CUSTOMER_UPDATE = "Details Updated";
-    public static final String INVALID_CLIENT = "UNSUPPORTED CLIENT TYPE" ;
+    public static final String INVALID_CLIENT = "UNSUPPORTED CLIENT TYPE";
     public static final String NOT_EXIST = "Invalid Email or Customer does not exist";
-    public static final String EMAIL_NOT_NULL =  "Email cannot be blank";
+    public static final String EMAIL_NOT_NULL = "Email cannot be blank";
     public static final String SCHEDULER_FAILED = "Login successful but failed to schedule email";
     public static final String INVALID_USER = "Invalid login credentials";
     public static final String EMAIL_SUBJECT = "Welcome Email!";

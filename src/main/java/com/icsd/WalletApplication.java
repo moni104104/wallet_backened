@@ -11,9 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableFeignClients(basePackages = "com.icsd")
 public class WalletApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(WalletApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(WalletApplication.class, args);
+    }
 }
