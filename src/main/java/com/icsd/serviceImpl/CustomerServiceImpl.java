@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import com.icsd.annotation.ValidEmailAOP;
 import com.icsd.dto.request.AddressDto;
 import com.icsd.model.Address;
 import com.icsd.service.AddressClientService;
@@ -79,16 +80,12 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public Customer isValidCustByEmailidAndPwd(@Valid CustomerLoginDTO customerLogin) {
-		log.info("Inside customer service to chek whether user is valid or not" + customerLogin);
+    @ValidEmailAOP
+	public Customer isValidCustByEmailidAndPwd(                                                                                          CustomerLoginDTO customerLogin) {
+		log.info("Inside customer service to check whether user is valid or not" + customerLogin);
 
 		Optional<Customer> optCust = customerRepo.findByEmailIdAndPassword(customerLogin.getEmailId(),
 				customerLogin.getPassword());
-		if (optCust.isEmpty()) {
-			log.info("customer is not existing for email id " + customerLogin.getEmailId() + " and pwd= "
-					+ customerLogin.getPassword());
-			throw new ResourceNotFoundException(messages.RESOURCE_NOT_FOUND);
-		}
 		Customer customer = optCust.get();
 		return customer;
 	}

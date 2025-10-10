@@ -36,6 +36,7 @@ import lombok.NoArgsConstructor;
 //    "state": "delhis"
 //}
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
