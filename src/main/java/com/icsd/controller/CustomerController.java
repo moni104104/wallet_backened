@@ -50,18 +50,23 @@ public class CustomerController {
 	@Autowired
 	private PdfService pdfService;
 
-	@PostMapping(value = "/customer")
-	public ResponseEntity<ApiResponse> createCustomer(@RequestBody @Valid CustomerRequestDto customerRequest) {
-		log.info("inside create method of customer controller");
 
-		Integer generatedCustomerId = customerService.createCustomer(customerRequest);
 
-		ApiResponse apiResponse = new ApiResponse(HttpStatus.OK.value(), messages.CUSTOMER_CREATE, generatedCustomerId);
-		return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.OK);
+    @PostMapping(value = "/customer")
+    public ResponseEntity<ApiResponse> createCustomer(@RequestBody @Valid CustomerRequestDto customerRequest) {
+        log.info("inside create method of customer controller");
 
-	}
+        Integer generatedCustomerId = customerService.createCustomer(customerRequest);
 
-	@GetMapping("customer/{customerId}")
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK.value(), messages.CUSTOMER_CREATE, generatedCustomerId);
+        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.OK);
+
+    }
+
+
+
+
+    @GetMapping("customer/{customerId}")
 	public ResponseEntity<ApiResponse> getCustomerByCustomerId(@PathVariable("customerId") int customerId) {
 		log.info("inside get method of customer controller");
 		Optional<Customer> cust = customerService.getCustomerByCustomerId(customerId);
@@ -146,7 +151,6 @@ public class CustomerController {
 		ApiResponse apiresponse = new ApiResponse(HttpStatus.FOUND.value(), messages.CUSTOMER_FOUND, cust);
 
 		return new ResponseEntity<>(apiresponse, HttpStatus.OK);
-
 	}
 
 	@GetMapping(value = "/customer/lastName/{lastName}")

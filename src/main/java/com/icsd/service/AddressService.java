@@ -1,8 +1,8 @@
 package com.icsd.service;
 
-import java.util.List;
-
 import com.icsd.model.Address;
+
+import java.util.List;
 
 public interface AddressService {
 

@@ -2,9 +2,8 @@ package com.icsd.repo;
 
 import java.util.List;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import com.icsd.model.Address;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AddressRepo extends JpaRepository<Address, Integer> {
 

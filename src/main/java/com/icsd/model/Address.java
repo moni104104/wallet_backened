@@ -20,17 +20,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 
 public class Address {
-@Id
-@SequenceGenerator(initialValue=1, name="mySeq", sequenceName="mySeq" ,allocationSize=1)
-@GeneratedValue(strategy= GenerationType.SEQUENCE, generator="mySeq")
-private int addressId;
+    @Id
+    @SequenceGenerator(initialValue=1, name="mySeq", sequenceName="mySeq" ,allocationSize=1)
+    @GeneratedValue(strategy= GenerationType.SEQUENCE, generator="mySeq")
+    private int addressId;
 
-private String addressLine1;
-private String addressLine2;
-private String city;
-private String state;
-@Column(length=6)
-private String pincode;
+    private String addressLine1;
+    private String addressLine2;
+    private String city;
+    private String state;
+    @Column(length=6)
+    private String pincode;
 
 
 
