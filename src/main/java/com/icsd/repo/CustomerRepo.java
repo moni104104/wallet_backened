@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -41,5 +43,8 @@ public interface CustomerRepo extends JpaRepository<Customer, Integer> {
 	List<Customer> findByFirstNameContainingIgnoreCase(String firstName);
 
 	List<Customer> findByEmailIdContainingIgnoreCase(String emailId);
+
+	Page<Customer> findByFirstNameContainingIgnoreCaseOrEmailIdContainingIgnoreCase(String keyword, String keyword2,
+			Pageable pageable);
 
 }
